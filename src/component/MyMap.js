@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps"
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from "react-google-maps"
 
 const MyMapComponent = withScriptjs(withGoogleMap((props) =>
   <GoogleMap
@@ -10,10 +10,21 @@ const MyMapComponent = withScriptjs(withGoogleMap((props) =>
   >
     {props.markers && 
     	props.markers
-    		.filter(marker => marker.isVisible)
-    		.map((marker,index) =>(
-    			<Marker key={index} position={{ lat: marker.lat, lng: marker.lng }} />
-    		))}
+    		.filter(marker => marker.isVisible).map((marker,index) => {
+    			const venueInfo = props.venues.find(venue => venue.id === marker.id);
+    			return (
+    				<Marker key={index} position={{ lat: marker.lat, lng: marker.lng }} onClick={() => props.handleMarkerClick(marker)}>
+	    				{marker.isOpen && venueInfo.bestPhoto && (
+	    					<InfoWindow>
+	    						<React.Fragment>
+	    							<img src={`${venueInfo.bestPhoto.prefix}200x200${venueInfo.bestPhoto.suffix}`} alt={"Venue Image"} />
+	    							<p>{venueInfo.name}</p>
+	    						</React.Fragment>
+	    					</InfoWindow>
+	  					)}
+	    			</Marker>
+    			);
+			})}
   </GoogleMap>
 ))
 
