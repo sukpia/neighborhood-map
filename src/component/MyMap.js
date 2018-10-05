@@ -13,7 +13,7 @@ const MyMapComponent = withScriptjs(withGoogleMap((props) =>
 
 const mapHeight = window.innerHeight
 
-class Map extends Component {
+class MyMap extends Component {
 	render() {
 		return(
 			<MyMapComponent
@@ -27,4 +27,4 @@ class Map extends Component {
 	}
 }
 
-export default Map;
+export default MyMap;
