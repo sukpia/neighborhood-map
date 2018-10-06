@@ -1,3 +1,4 @@
+/* global google */
 import React, { Component } from 'react';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow } from "react-google-maps"
 
@@ -10,14 +11,17 @@ const MyMapComponent = withScriptjs(withGoogleMap((props) =>
   >
     {props.markers && 
     	props.markers
-    		.filter(marker => marker.isVisible).map((marker,index) => {
+    		.filter(marker => marker.isVisible).map((marker,index, arr) => {
     			const venueInfo = props.venues.find(venue => venue.id === marker.id);
     			return (
-    				<Marker key={index} position={{ lat: marker.lat, lng: marker.lng }} onClick={() => props.handleMarkerClick(marker)}>
+    				<Marker key={index} position={{ lat: marker.lat, lng: marker.lng }} 
+    					onClick={() => props.handleMarkerClick(marker)}
+    					animation={arr.length === 1 ? google.maps.Animation.BOUNCE : google.maps.Animation.DROP}
+  					>
 	    				{marker.isOpen && venueInfo.bestPhoto && (
 	    					<InfoWindow>
 	    						<React.Fragment>
-	    							<img src={`${venueInfo.bestPhoto.prefix}200x200${venueInfo.bestPhoto.suffix}`} alt={"Venue Image"} />
+	    							<img src={`${venueInfo.bestPhoto.prefix}200x200${venueInfo.bestPhoto.suffix}`} alt={`${venueInfo.name}`} />
 	    							<p>{venueInfo.name}</p>
 	    						</React.Fragment>
 	    					</InfoWindow>
@@ -28,8 +32,6 @@ const MyMapComponent = withScriptjs(withGoogleMap((props) =>
   </GoogleMap>
 ))
 
-const mapHeight = window.innerHeight
-
 class MyMap extends Component {
 	render() {
 		return(
@@ -38,7 +40,7 @@ class MyMap extends Component {
 			  // isMarkerShown
 			  googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDLDeN27QtQJVyCa5W3D5WMRRGTWoKAjPU"
 			  loadingElement={<div style={{ height: `100%` }} />}
-			  containerElement={<div style={{ height: `${mapHeight}px` }} />}
+			  containerElement={<div style={{ height: `100%`, width: `75%` }} />}
 			  mapElement={<div style={{ height: `100%` }} />}
 			/>
 		)

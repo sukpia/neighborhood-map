@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // import logo from './logo.svg';
 import './App.css';
 import MyMap from './component/MyMap';
+import SideBar from './component/SideBar';
 import SquareAPI from './API/';
 
 class App extends Component {
@@ -14,7 +15,10 @@ class App extends Component {
         lat: 37.7749,
         lng: -122.4194
       },
-      zoom: 13
+      zoom: 10,
+      updateSuperState: obj => {
+        this.setState(obj);
+      }
     };
   }
 
@@ -35,8 +39,14 @@ class App extends Component {
     SquareAPI.getVenueDetails(marker.id).then(res => {
       const newVenue = Object.assign(venue, res.response.venue);
       this.setState({venues: Object.assign(this.state.venues,newVenue)})
-      console.log(newVenue);
+      // console.log(newVenue);
     });
+  }
+
+  handleListItemClick = (venue) => {
+    const marker = this.state.markers.find(marker => marker.id === venue.id);
+    this.handleMarkerClick(marker);
+    console.log(venue);
   }
   
   componentDidMount() {
@@ -66,6 +76,7 @@ class App extends Component {
 
     return (
       <div className="app">
+        <SideBar {...this.state} handleListItemClick={this.handleListItemClick} />
         <MyMap {...this.state}
         handleMarkerClick={this.handleMarkerClick} />
       </div>
